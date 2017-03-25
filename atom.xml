@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Wtttttt天</title>
+  <subtitle>码农的幸福生活</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://yoursite.com/"/>
+  <updated>2017-03-25T03:32:31.000Z</updated>
+  <id>http://yoursite.com/</id>
+  
+  <author>
+    <name>Wtttttt天</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>iOS - 路由解耦</title>
+    <link href="http://yoursite.com/2017/03/24/iOS-JSSDK/"/>
+    <id>http://yoursite.com/2017/03/24/iOS-JSSDK/</id>
+    <published>2017-03-24T04:54:42.000Z</published>
+    <updated>2017-03-25T03:32:31.000Z</updated>
+    
+    <content type="html"><![CDATA[<div class="toc">
+
+<!-- toc -->
+<ul>
+<li><a href="#lu-you-jie-ou-shi-sha">路由解耦是啥？</a></li>
+<li><a href="#lu-you-jie-ou-neng-jie-jue-shi-me">路由解耦能解决什么？</a></li>
+<li><a href="#ji-zhu-xu-qiu-bei-jing">技术需求背景</a></li>
+<li><a href="#zheng-li-ji-zhu-shi-xian-si-lu">整理技术实现思路</a></li>
+<li><a href="#yi-hybrid-jssdk">一、Hybrid(JSSDK)</a><ul>
+<li><a href="#hybrid-jssdk-de-shi-yong-chang-jing-ji-url-ju-li">Hybrid(JSSDK)的使用场景及URL举例</a></li>
+</ul>
+</li>
+<li><a href="#er-openurl">二、OpenURL</a><ul>
+<li><a href="#openurl-yu-dao-de-keng">OpenURL遇到的坑</a></li>
+<li><a href="#openurl-de-shi-yong-chang-jing-ji-url-ju-li">OpenURL的使用场景及URL举例</a></li>
+</ul>
+</li>
+<li><a href="#san-universal-links">三、Universal Links</a><ul>
+<li><a href="#universal-links-de-shi-yong-chang-jing-ji-url-ju-li">Universal Links的使用场景及URL举例</a></li>
+</ul>
+</li>
+<li><a href="#shi-xian-yao-dian">实现要点</a><ul>
+<li><a href="#jie-xi-url-de-ru-kou">解析URL的入口</a></li>
+<li><a href="#jie-xi-hou-de-zi-duan-zuo-lu-you-zhuan-fa">解析后的字段作路由转发</a></li>
+</ul>
+</li>
+<li><a href="#wei-wan-dai-xu">未完待续</a></li>
+</ul>
+<!-- tocstop -->
+</div>
+
+<h2 id="lu-you-jie-ou-shi-sha"><a href="#路由解耦是啥？" class="headerlink" title="路由解耦是啥？"></a>路由解耦是啥？</h2><p>路由解耦，故名思意就是使用URL，根据请求地址进行解析，映射到相关代码的逻辑操作，诸如：页面跳转、UI弹层展示、事件分发、IO存储等等，对于调用方来说，使用统一标准化格式的URL协议即可。<br>在iOS端的开发中，使用URL交互的地方无外乎：应用内Web、应用外Web、应用模块间解耦单向通信（双向通信使用模块暴露接口会更佳合理和优雅），本文将从Hybrid(JSSDK)、OpenURL(iOS9-)、Universal Links(iOS9+)三方面阐述路由解耦设计的一些经验和思考。</p>
+<h2 id="lu-you-jie-ou-neng-jie-jue-shi-me"><a href="#路由解耦能解决什么？" class="headerlink" title="路由解耦能解决什么？"></a>路由解耦能解决什么？</h2><ol>
+<li>应用内Web，使用封装的Hybrid(JSSDK)进行双向通信。</li>
+<li>应用外Web，会受到制约：有的APP比较强势，会拦截URL，不允许跳转到外部应用，例如：微信。iOS8目前仍无解(用户占比少)，但iOS9+(用户占比极高)的设备可以使用Universal Links来解决该问题。</li>
+<li>应用模块间解耦单向通信，相当于给模块暴露的单向通信接口起一个URL的别名，好处是方便业务部门的人来使用，例如：活动配置，下发URL可以跳转到相应的页面。</li>
+</ol>
+<h2 id="ji-zhu-xu-qiu-bei-jing"><a href="#技术需求背景" class="headerlink" title="技术需求背景"></a>技术需求背景</h2><ol>
+<li>在早期的iOS开发中，经常需要会遇到调用或跳转外部其他App，诸如：在关于联系我们页面中的电话点击事件触发后直接拨打电话、点击email时弹出发送邮件页（预设好接受人email、主题、内容等）、跳转到Apple的设置页、跳转到Sina微博分享等等，Apple在iOS2.0时提供了OpenURL解决方案来支持上述的需求场景。</li>
+<li>项目中有很多活动相关的Web页，在Web页面中常常需要获取客户端的信息、调用客户端的原生功能，诸如：获取客户端版本号、打开客户端的原生页面、修改导航栏色值、调用客户端的本地逻辑操作等。</li>
+<li>在微信这种强势APP中，OpenURL被它拦截，导致无法跳转自己的APP 的相关功能页。</li>
+<li>由于OpenURL的过程没有任何安全性校验，导致APP内支持的OpenURL可能会被任何的App随时呼起，以及滥用其中的功能。Apple考虑到OpenURL安全性不足，于是在iOS9中推出了Universal Links(通用链接)和ATS 隐私控制，不在AASA、ATS白名单的域名统统被拒绝。我们工程最低版本支持iOS8+，Web页在iOS8的设备上能通过OpenURL唤起APP，但iOS9+后，由于未配置Universal Links，导致OpenURL失效，最终无法唤起APP。</li>
+</ol>
+<h2 id="zheng-li-ji-zhu-shi-xian-si-lu"><a href="#整理技术实现思路" class="headerlink" title="整理技术实现思路"></a>整理技术实现思路</h2><p>Hybrid(JSSDK)、OpenURL、Universal Links三者都是使用URL统一资源定位符来与客户端通信，这三者的通性，利用这一点，只要URL统一规则，客户端就可以无差别的解析处理了。<br>格式定义如下：<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scheme://module:port/method?&#123;query:&#123;&#125;&#125;</div></pre></td></tr></table></figure></p>
+<ol>
+<li>关于scheme，Hybrid(JSSDK)、OpenURL、Universal Links可以使用一致的scheme，一般而言，scheme统一使用项目的scheme即可。Hybrid(JSSDK)使用了scheme为jsbridge来区分这是JSSDK的API。</li>
+<li>port，解析后，只有Hybrid(JSSDK)会使用该参数进行OC与JS通信，实现原理很简单，JS提供一个回调方法，port参数用于告知是哪一个事件回调了，就像设置了一个delegate。OpenURL、Universal Links只能URL-&gt;客户端的单向通信，无法回传数据给调用方，即无法使用、也不需要port参数。</li>
+<li>module，模块，映射到客户端的哪个模块。</li>
+<li>method，方法，映射到客户端的哪个模块的哪个方法。</li>
+<li>query，参数，映射到客户端的哪个模块的哪个方法中的参数。</li>
+</ol>
+<p>不同的iOS版本、应用内、应用外，使用的安全处理机制不一样，解决方案如下：</p>
+<ol>
+<li>iOS8设备，Hybrid(JSSDK) 有自己单独的域名白名单，可以监管到安全问题；OpenURL可以随意调用，无法监管到安全问题。</li>
+<li>iOS9+设备，Hybrid(JSSDK) 有自己单独的域名白名单，可以监管到安全问题；应用内HTTP、Web由ATS监管安全问题；Universal Links使用配置的apple-app-site-association来监管安全问题。<blockquote>
+<p><strong>注意：如果开启了ATS功能，iOS9和iOS10还是有些区别的，iOS9中的ATS没有区分本地请求和Web请求，iOS10中考虑到Web无法全部使用ATS的场景，所以如果在项目中开启了ATS并设置了NSExceptionDomains白名单以及开启了NSAllowsArbitraryLoadsInWebContent字段为true，那在iOS9应用内Web会验证白名单，而iOS10应用内Web不会验证白名单，直接使用NSAllowsArbitraryLoadsInWebContent允许全部的web关闭ATS验证。当前iOS端主流最低支持版本为iOS8+，这就需要和客户端合作的Web前端同学注意资源域名要在白名单中才能兼容iOS9的设备Web正常访问资源。</strong></p>
+</blockquote>
+</li>
+</ol>
+<h2 id="yi-hybrid-jssdk"><a href="#一、Hybrid-JSSDK" class="headerlink" title="一、Hybrid(JSSDK)"></a>一、Hybrid(JSSDK)</h2><p>关于JSSDK，核心技术有以下几点：</p>
+<ol>
+<li><p>URL的协议定义，上述讲了，为了避免上翻回去查找，这里再贴一次，格式为：</p>
+<blockquote>
+<p>scheme://module:port/method?{query:{}}</p>
+</blockquote>
+</li>
+<li><p>使用OC的动态性、以及使用block回调，动态查找类、方法，动态调用方法，动态传入参数，动态性+block的组合很完美。</p>
+</li>
+<li>利用port字段，在OC回调JS方法时传入，作为delegate使用，这样就支持了OC与JS的双向通信能力。<br>实际编码过程中，JSSDK的核心代码量不超过100行，是不是特别简单容易理解。</li>
+</ol>
+<h3 id="hybrid-jssdk-de-shi-yong-chang-jing-ji-url-ju-li"><a href="#Hybrid-JSSDK-的使用场景及URL举例" class="headerlink" title="Hybrid(JSSDK)的使用场景及URL举例"></a>Hybrid(JSSDK)的使用场景及URL举例</h3><p>举例双向通信和单向通信，栗子来了：<br>使用场景如下：</p>
+<ol>
+<li>Web页调用JS获取客户端的信息，通过port端口号回调JS方法，好比：获取客户端的VersionCode，如下代码所示：</li>
+</ol>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//双向通信</span></div><div class="line">jsbridge:<span class="comment">//device:1/versionCode</span></div></pre></td></tr></table></figure>
+<ol>
+<li>Web页调用JS设置导航栏右侧按钮，点击按钮后，通过port端口号回调JS方法，好比：设置Web页导航栏右侧按钮为分享，如下代码所示：</li>
+</ol>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//双向通信</span></div><div class="line">jsbridge:<span class="comment">//ui:2/setHeaderRight?&#123;"query":&#123;"icon":"share"&#125;&#125;</span></div></pre></td></tr></table></figure>
+<ol>
+<li>应用内Web页的JS -&gt; OC 单向通信，好比：Web页中点击封面跳转客户端原生书籍详情页：</li>
+</ol>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//单向通信</span></div><div class="line">jsbridge:<span class="comment">//app/showBook?&#123;"query":&#123;"bookId": 1004976324&#125;&#125;</span></div></pre></td></tr></table></figure>
+<h2 id="er-openurl"><a href="#二、OpenURL" class="headerlink" title="二、OpenURL"></a>二、OpenURL</h2><p>OpenURL设计的目的就是解耦模块，我们来看看它能做什么：</p>
+<ol>
+<li>Apple就提供了若干的功能，诸如：打电话、发邮件、打开AppStore等。</li>
+<li>常见的第三方登录模块也用的OpenURL来进行APP间跳转式的双向通信。</li>
+<li>APNS推送中可以添加字段URL，用户点击推送后，可以执行相应逻辑，这里能很清楚地看得到模块间的解耦。</li>
+<li>桌面APP使用3D Touch时，可以用OpenURL的思路解决模块解耦问题，在设置3D Touch项时，使用OpenURL作为item的描述，这样3D Touch回调事件里只需写一句话：执行OpenURL。</li>
+</ol>
+<h3 id="openurl-yu-dao-de-keng"><a href="#OpenURL遇到的坑" class="headerlink" title="OpenURL遇到的坑"></a>OpenURL遇到的坑</h3><p>实际使用过程中，我发现Apple的OpenURL效率并不高，在某些场景下速度慢的惊人，譬如上述它能做什么中的第4点，如果在3D Touch回调中直接使用Apple的OpenURL方法，真机上看到的现象是进入APP奇慢无比，像是卡住了一样。3D Touch回调事件代码如下:</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)application:(<span class="built_in">UIApplication</span> *)application performActionForShortcutItem:(<span class="built_in">UIApplicationShortcutItem</span> *)shortcutItem completionHandler:(<span class="keyword">void</span>(^)(<span class="built_in">BOOL</span> succeeded))completionHandler &#123;</div><div class="line">    <span class="built_in">NSString</span> *urlString = shortcutItem.type;</div><div class="line">    <span class="keyword">if</span> (urlString.length == <span class="number">0</span>) <span class="keyword">return</span>;</div><div class="line">    [[<span class="built_in">UIApplication</span> sharedApplication] openURL:[<span class="built_in">NSURL</span> URLWithString:[urlString stringByAddingPercentEscapesUsingEncoding:<span class="built_in">NSUTF8StringEncoding</span>]];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>解决办法也很简单：<br>其实想想就知道OpenURL是用于APP外部调用的，在我们APP应用内直接走解析URL和动态执行方法就好了。改进后的代码：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)application:(<span class="built_in">UIApplication</span> *)application performActionForShortcutItem:(<span class="built_in">UIApplicationShortcutItem</span> *)shortcutItem completionHandler:(<span class="keyword">void</span>(^)(<span class="built_in">BOOL</span> succeeded))completionHandler &#123;</div><div class="line">    <span class="built_in">NSString</span> *urlString = shortcutItem.type;</div><div class="line">    <span class="keyword">if</span> (urlString.length == <span class="number">0</span>) <span class="keyword">return</span>;</div><div class="line">    [<span class="keyword">self</span> qd_handleActionUrl:[<span class="built_in">NSURL</span> URLWithString:[urlString stringByAddingPercentEscapesUsingEncoding:<span class="built_in">NSUTF8StringEncoding</span>]]];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="openurl-de-shi-yong-chang-jing-ji-url-ju-li"><a href="#OpenURL的使用场景及URL举例" class="headerlink" title="OpenURL的使用场景及URL举例"></a>OpenURL的使用场景及URL举例</h3><p>使用场景如下：</p>
+<ol>
+<li>应用内部调用URL路由作模块解耦，好比：书籍详情页调用加书架功能：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">QD://app/addToBookshelf?&#123;&quot;query&quot;:&#123;&quot;bookId&quot;: 1004976324&#125;&#125;</div></pre></td></tr></table></figure>
+<ol>
+<li>微信中点击链接打开客户端原生页面， 好比：微信公众号里分享了一本经典小说，点击后跳转打开客户端原生阅读页：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">QD://app/openBook?&#123;&quot;query&quot;:&#123;&quot;bookId&quot;: 1004976324&#125;&#125;</div></pre></td></tr></table></figure>
+<ol>
+<li>APNS推送点击后可以响应客户端本地事件，好比：用户收到了一条热门书籍推送，点击推送后跳转客户端原生书籍详情页：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">QD://app/showBook?&#123;&quot;query&quot;:&#123;&quot;bookId&quot;: 1004976324&#125;&#125;</div></pre></td></tr></table></figure>
+<h2 id="san-universal-links"><a href="#三、Universal-Links" class="headerlink" title="三、Universal Links"></a>三、Universal Links</h2><p>这里讲到它的目的，是以下2点：</p>
+<ol>
+<li>在iOS9+时，Apple提出了ATS的要求，以前的OpenURL在Web前端可以随意被其他APP滥用，没有任何的安全机制保护，于是推出了Universal Links来增加OpenURL在Web前端的安全合法校验，只有域名验证通过的链接，才能使用OpenURL打开APP。</li>
+<li>微信中拦截了URL，不让跳转到外部应用中。但Universal Links是系统级别的，可以绕过微信的拦截限制。</li>
+</ol>
+<p>它和Hybrid(JSSDK)、OpenURL的URL格式有所区别，它的格式如下：<br>PS: 由于Universal Links只作单向通信，所以我们忽略port参数(port参数的目的就是作为双向通信delegate)。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scheme:<span class="comment">//host/route/module/method?&#123;query:&#123;&#125;&#125;</span></div></pre></td></tr></table></figure>
+<p>它的区别在于:它多出来了host/route，除了这一点，其他格式和Hybrid(JSSDK)、OpenURL的URL毫无差别，所以当客户端接收到URL时，过滤掉host/route就可以了。</p>
+<h3 id="universal-links-de-shi-yong-chang-jing-ji-url-ju-li"><a href="#Universal-Links的使用场景及URL举例" class="headerlink" title="Universal Links的使用场景及URL举例"></a>Universal Links的使用场景及URL举例</h3><p>使用场景如下：</p>
+<ol>
+<li>iOS9+在Web前端的链接，好比：书籍详情页调用加书架功能：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">QD://qidian.com/reader/app/addToBookshelf?&#123;&quot;query&quot;:&#123;&quot;bookId&quot;: 1004976324&#125;&#125;</div></pre></td></tr></table></figure>
+<ol>
+<li>微信中点击链接打开客户端原生页面， 好比：微信公众号里分享了一本经典小说，点击后跳转打开客户端原生阅读页：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">QD://qidian.com/reader/app/openBook?&#123;&quot;query&quot;:&#123;&quot;bookId&quot;: 1004976324&#125;&#125;</div></pre></td></tr></table></figure>
+<h2 id="shi-xian-yao-dian"><a href="#实现要点" class="headerlink" title="实现要点"></a>实现要点</h2><h3 id="jie-xi-url-de-ru-kou"><a href="#解析URL的入口" class="headerlink" title="解析URL的入口"></a>解析URL的入口</h3><p>Hybrid(JSSDK)、OpenURL、Universal Links 3者处理URL入口不一样，具体如下：</p>
+<ol>
+<li>Hybrid(JSSDK)在UIWebView的delegate回调中拦截URL进行特殊处理，如果Hybrid(JSSDK)拦截成功，则直接返回NO，打断UIWebView自身的处理逻辑；否则返回YES，继续UIWebView的处理逻辑，方法如下：</li>
+</ol>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">-(<span class="built_in">BOOL</span>)webView:shouldStartLoadWithRequest:navigationType:</div></pre></td></tr></table></figure>
+<ol>
+<li>OpenURL，在AppDelegate的回调中处理解析URL，iOS8与iOS9的有所区别，如下所示：</li>
+</ol>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//iOS9代理回调方法</span></div><div class="line">-(<span class="built_in">BOOL</span>)application:openURL:options:</div><div class="line"></div><div class="line"><span class="comment">//iOS8代理回调方法</span></div><div class="line">-(<span class="built_in">BOOL</span>)application:openURL:sourceApplication:annotation:</div></pre></td></tr></table></figure>
+<ol>
+<li>Universal Links，在AppDelegate的回调中处理解析URL，方法如下：</li>
+</ol>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//需要注意一点的是，通用链接过来的URL，会带有host/route，在代理方法中需要过滤掉host/route，将格式统一为scheme://module/method?&#123;query:&#123;&#125;&#125;</span></div><div class="line">-(<span class="built_in">BOOL</span>)application:continueUserActivity:restorationHandler:</div></pre></td></tr></table></figure>
+<ol>
+<li>暴露了一个C函数，方便跨模块调用，主要用于解耦目的。目前只支持单向通信（考虑到双向通信会增加复杂度，使用模块对外暴露接口更优雅，所以暂不考虑双向通信）。举例，调用方法如下：</li>
+</ol>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">QDRouteBridge(<span class="string">@"QDReader://app/addToBookshelf?&#123;\"query\":&#123;\"bookId\": 1004976324&#125;&#125;"</span>)</div></pre></td></tr></table></figure>
+<h3 id="jie-xi-hou-de-zi-duan-zuo-lu-you-zhuan-fa"><a href="#解析后的字段作路由转发" class="headerlink" title="解析后的字段作路由转发"></a>解析后的字段作路由转发</h3><p>当成功解析了scheme、port、module、method、query部分后，iOS客户端会通过module映射到一个类名，method映射到其中的一个具体方法，query、port这2个作为传入参数，然后执行该方法。<br>总结关键执行步骤：</p>
+<ol>
+<li>映射到具体的类。</li>
+<li>拼接方法名。</li>
+<li>利用OC语言的动态性，动态调用方法。<br>关键的代码部分：</li>
+</ol>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">-(<span class="built_in">BOOL</span>)qd_handleJsRequest:(<span class="built_in">NSURL</span> *)request module:(<span class="built_in">NSString</span> *)module method:(<span class="built_in">NSString</span> *)method port:(<span class="built_in">NSNumber</span> *)port query:(<span class="built_in">NSDictionary</span> *)query fromEnv:(<span class="built_in">NSDictionary</span> *)env &#123;</div><div class="line">    <span class="keyword">if</span> (!request ||</div><div class="line">        !module ||</div><div class="line">        !method) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="literal">YES</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    SEL selector = <span class="built_in">NSSelectorFromString</span>([<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"qd_handleJsBridgeRequest_%@_%@:port:"</span>, module, method]);</div><div class="line">    <span class="keyword">if</span> ([<span class="keyword">self</span> respondsToSelector:selector]) &#123;</div><div class="line">        <span class="keyword">id</span>&lt;QDJSWebViewProtocol&gt; webViewController = [env objectForKey:kJSPluginEnvWebViewController];</div><div class="line">        <span class="keyword">self</span>.webViewController = webViewController;</div><div class="line"></div><div class="line">        ((<span class="keyword">void</span> (*)(<span class="keyword">id</span>, SEL, <span class="built_in">NSDictionary</span>*, <span class="built_in">NSNumber</span> *))objc_msgSend)(<span class="keyword">self</span>, selector, query, port);</div><div class="line">        <span class="keyword">return</span> <span class="literal">YES</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="literal">NO</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="wei-wan-dai-xu"><a href="#未完待续" class="headerlink" title="未完待续"></a>未完待续</h2>]]></content>
+    
+    <summary type="html">
+    
+      &lt;div class=&quot;toc&quot;&gt;
+
+&lt;!-- toc --&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#lu-you-jie-ou-shi-sha&quot;&gt;路由解耦是啥？&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#lu-you-jie-ou-neng-jie-jue-shi-me&quot;&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+</feed>
