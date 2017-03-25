@@ -4,9 +4,9 @@
   <subtitle>码农的幸福生活</subtitle>
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://yoursite.com/"/>
+  <link href="http://fanwt.com/"/>
   <updated>2017-03-25T03:32:31.000Z</updated>
-  <id>http://yoursite.com/</id>
+  <id>http://fanwt.com/</id>
   
   <author>
     <name>Wtttttt天</name>
@@ -17,8 +17,8 @@
   
   <entry>
     <title>iOS - 路由解耦</title>
-    <link href="http://yoursite.com/2017/03/24/iOS-JSSDK/"/>
-    <id>http://yoursite.com/2017/03/24/iOS-JSSDK/</id>
+    <link href="http://fanwt.com/2017/03/24/iOS-JSSDK/"/>
+    <id>http://fanwt.com/2017/03/24/iOS-JSSDK/</id>
     <published>2017-03-24T04:54:42.000Z</published>
     <updated>2017-03-25T03:32:31.000Z</updated>
     
