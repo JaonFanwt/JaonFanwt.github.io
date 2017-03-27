@@ -131,7 +131,9 @@
         </div>
         <!-- Post Main Content -->
         <div class="entry-content">
-          <p>所处行业是阅读类产品，开发过程中遇到产品需要在阅读渲染页加各种与阅读正文无关的一些增强用户粘性需求，好比添加：章评、段评、打赏等酷炫的界面。<br>开发过程中又需要解耦模块，不希望这个新增的页面影响到阅读渲染本身，我这里有一种尝试思路，如有问题希望轻拍。<br>PS：目前还未运用到实际项目中，只是一个解耦的想法而已💡</p>
+          <p>当前从事阅读类产品开发，开发过程中遇到产品需要在阅读渲染页加各种与阅读正文无关的一些增强用户粘性需求，好比添加：章评、段评、打赏等酷炫的界面。</p>
+<p>开发过程中又需要解耦模块，不希望这个新增的页面影响到阅读渲染本身，我这里有一种尝试思路，如有问题希望轻拍。</p>
+<p>PS：目前还未运用到实际项目中，只是一个解耦的想法而已💡</p>
 <h2 id="jie-jue-si-lu"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h2><ol>
 <li>如何解决在已渲染好的阅读页中动态加入自定义页，不影响阅读页排版功能，不侵入阅读代码？<br>答：假设自定页面只有一页，且高度就是该阅读页正文显示完剩余的区域，那么直接将自定义页面以addSubView的形式加入到该阅读页。</li>
 <li>当自定义页超过一屏时，如何尽可能小影响或不影响阅读翻页逻辑？<br>答：前提：目前我们的阅读框架中每页是否有下一页是一个动态询问过程，翻页手势会询问容器中的当前页是否有前、后一页。修改点：询问逐层传递的思想，修改后，阅读页中有自定义子页时，应优先询问子页是否有下一页，如果有，下一页显示自定义子页，如果没有，再看阅读页自身是否有下一页。</li>
@@ -145,7 +147,7 @@
     <div class="container">
       
 <section id="comment">
-  <!-- <h1 class="title">Comments</h1> -->
+  <!-- <h1 class="title">留言</h1> -->
 
   
 </section>
@@ -157,7 +159,7 @@
       
       
         <div class="nav-next">
-          <a href="/2017/03/24/iOS-JSSDK/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
+          <a href="/2017/03/24/iOS-JSSDK/" rel="prev">下一页 <span class="meta-arraw meta-arraw-right"></span></a>
         </div>
       
     </div>
@@ -181,7 +183,7 @@
     </div>
     <div class="col-1-3">
       <aside>
-        <h1 class="widget-title">Contact</h1>
+        <h1 class="widget-title">与我联系</h1>
         <div class="widget-text">
           
             
@@ -193,7 +195,7 @@
     </div>
     <div class="col-1-3">
       <aside>
-        <h1 class="widget-title">Search</h1>
+        <h1 class="widget-title">站内搜索</h1>
         <div class="widget-text">
           <form onSubmit="return appDaily.submitSearch('')">
             <p>
