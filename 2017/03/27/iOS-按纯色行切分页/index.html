@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<!-- Head tag -->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!--Description-->
+  
+  <meta name="description" content="想写什么写什么，blablabla">
+  
+
+  <!--Author-->
+  
+  <meta name="author" content="Wtttttt天">
+  
+
+  <!--Open Graph Title-->
+  
+      <meta property="og:title" content="Wtttttt天"/>
+  
+  <!--Open Graph Description-->
+  
+      <meta property="og:description" content="想写什么写什么，blablabla" />
+  
+  <!--Open Graph Site Name-->
+  <meta property="og:site_name" content="Wtttttt天"/>
+  <!--Type page-->
+  
+      <meta property="og:type" content="website" />
+  
+  <!--Page Cover-->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- Title -->
+  
+  <title>Wtttttt天</title>
+
+
+  <link rel="shortcut icon" href="https://hexo.io/icon/favicon-96x96.png">
+
+  <!-- Custom CSS/Sass -->
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!----------------------------
+  https://github.com/GallenHu/hexo-theme-Daily
+
+ _____            _   _
+|  __ \          (_) | |
+| |  | |   __ _   _  | |  _   _
+| |  | |  / _` | | | | | | | | |
+| |__| | | (_| | | | | | | |_| |
+|_____/   \__,_| |_| |_|  \__, |
+                          __/ |
+                         |___/
+
+    --------------------------->
+
+</head>
+
+
+<body>
+
+  <!-- Nav -->
+  <header class="site-header">
+  <div class="header-inside">
+    <div class="logo">
+      <a href="/" rel="home">
+        
+        <img src="https://hexo.io/logo.svg" alt="Wtttttt天" height="60">
+        
+      </a>
+    </div>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse">
+        <ul class="navbar-nav">
+          
+          
+            <li>
+              <a href="/.">
+                
+                  home
+                
+              </a>
+            </li>
+          
+            <li>
+              <a href="/archives">
+                
+                  archive
+                
+              </a>
+            </li>
+          
+        </ul>
+      </div>
+      <!-- /.navbar-collapse -->
+    </nav>
+    <div class="button-wrap">
+      <button class="menu-toggle">Primary Menu</button>
+    </div>
+  </div>
+</header>
+
+
+  <!-- Main Content -->
+  <div class="content-area">
+  <div class="post">
+    <!-- Post Content -->
+    <div class="container">
+      <article>
+        <!-- Title date & tags -->
+        <div class="post-header">
+          <h1 class="entry-title">
+            Untitled
+            
+          </h1>
+          <p class="posted-on">
+          2017-03-27
+          </p>
+          <div class="tags-links">
+            
+              
+            
+          </div>
+        </div>
+        <!-- Post Main Content -->
+        <div class="entry-content">
+          <h1 id="an-chun-se-xing-qie-fen-ye-de-xiang-fa-lai-you"><a href="#按纯色行切分页的想法来由" class="headerlink" title="按纯色行切分页的想法来由"></a>按纯色行切分页的想法来由</h1><p>所处行业是阅读类产品，开发过程中遇到产品需要在阅读渲染页加各种与阅读正文无关的一些增强用户粘性需求，好比添加：章评、段评、打赏等酷炫的界面。<br>开发过程中又需要解耦模块，不希望这个新增的页面影响到阅读渲染本身，我这里有一种尝试思路，如有问题希望轻拍。<br>PS：目前还未运用到实际项目中，只是一个解耦的想法而已💡</p>
+<h2 id="jie-jue-si-lu"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h2><ol>
+<li>如何解决在已渲染好的阅读页中动态加入自定义页，不影响阅读页排版功能，不侵入阅读代码？<br>答：假设自定页面只有一页，且高度就是该阅读页正文显示完剩余的区域，那么直接将自定义页面以addSubView的形式加入到该阅读页。</li>
+<li>当自定义页超过一屏时，如何尽可能小影响或不影响阅读翻页逻辑？<br>答：前提：目前我们的阅读框架中每页是否有下一页是一个动态询问过程，翻页手势会询问容器中的当前页是否有前、后一页。修改点：询问逐层传递的思想，修改后，阅读页中有自定义子页时，应优先询问子页是否有下一页，如果有，下一页显示自定义子页，如果没有，再看阅读页自身是否有下一页。</li>
+</ol>
+<h2 id="he-xin-ru-he-qie-ye"><a href="#核心：如何切页" class="headerlink" title="核心：如何切页"></a>核心：如何切页</h2><p>自定义页面转为像素data，注意不要用高清，节省内存，给一个起始锚点，逐行扫描，当遇到色值不一样时，换行。<br>代码如下：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">enum</span> &#123;</div><div class="line">    eFindPureSeparateLinePointDirection_down = <span class="number">0</span>,</div><div class="line">    eFindPureSeparateLinePointDirection_up</div><div class="line">&#125;eFindPureSeparateLinePointDirection;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">UIView</span> (<span class="title">WtExt</span>)</span></div><div class="line">- (<span class="built_in">CGPoint</span>)wt_findPureSeparateLinePointWithAnchor:(<span class="built_in">CGPoint</span>)point direction:(eFindPureSeparateLinePointDirection)direction;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">UIView</span> (<span class="title">WtExt</span>)</span></div><div class="line">- (<span class="built_in">CGPoint</span>)wt_findPureSeparateLinePointWithAnchor:(<span class="built_in">CGPoint</span>)point direction:(eFindPureSeparateLinePointDirection)direction &#123;</div><div class="line">    <span class="keyword">int</span> preR = <span class="number">-1</span>, preG = <span class="number">-1</span>, preB = <span class="number">-1</span>, preA = <span class="number">-1</span>;</div><div class="line"></div><div class="line">    size_t pixelsWidth = <span class="built_in">CGRectGetWidth</span>(<span class="keyword">self</span>.frame);</div><div class="line">    size_t pixelsHeight = <span class="built_in">CGRectGetHeight</span>(<span class="keyword">self</span>.frame);</div><div class="line">    <span class="keyword">int</span> x = point.x;</div><div class="line">    <span class="keyword">int</span> y = point.y;</div><div class="line"></div><div class="line">    <span class="built_in">CGFloat</span> scale = <span class="number">1</span>;</div><div class="line">    <span class="built_in">CGSize</span> size = <span class="built_in">CGSizeMake</span>(<span class="keyword">self</span>.frame.size.width*scale, <span class="keyword">self</span>.frame.size.height*scale) ;</div><div class="line">    <span class="keyword">int</span> bitPerRow = size.width * <span class="number">4</span>;</div><div class="line">    <span class="keyword">int</span> bitCount = bitPerRow * size.height;</div><div class="line">    <span class="built_in">UInt8</span> *bitdata = malloc(bitCount);</div><div class="line">    <span class="keyword">if</span> (bitdata == <span class="literal">NULL</span>) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="built_in">CGPointMake</span>(<span class="number">-1</span>, INT_MAX);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="built_in">CGColorSpaceRef</span> deviceRGB = <span class="built_in">CGColorSpaceCreateDeviceRGB</span>();</div><div class="line">    <span class="keyword">if</span> (deviceRGB == <span class="literal">NULL</span>) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="built_in">CGPointMake</span>(<span class="number">-1</span>, INT_MAX);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="built_in">CGContextRef</span> contex = <span class="built_in">CGBitmapContextCreate</span>(bitdata, size.width, size.height, <span class="number">8</span>, bitPerRow, deviceRGB, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);</div><div class="line">    <span class="keyword">if</span> (contex == <span class="literal">NULL</span>) &#123;</div><div class="line">        <span class="built_in">CFRelease</span>(deviceRGB);</div><div class="line">        <span class="keyword">return</span> <span class="built_in">CGPointMake</span>(<span class="number">-1</span>, INT_MAX);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="built_in">CFRelease</span>(deviceRGB);</div><div class="line"></div><div class="line">    <span class="built_in">CGContextTranslateCTM</span>(contex, <span class="number">0</span>, size.height);</div><div class="line">    <span class="built_in">CGContextScaleCTM</span>(contex, scale, -scale);</div><div class="line"></div><div class="line">    [<span class="keyword">self</span>.layer renderInContext:contex];</div><div class="line"></div><div class="line">    <span class="keyword">int</span> i = (direction==eFindPureSeparateLinePointDirection_down)?<span class="number">1</span>:<span class="number">-1</span>;</div><div class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (y &gt;= pixelsHeight) &#123;</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (x &gt;= pixelsWidth) &#123;</div><div class="line">            x = point.x;</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">int</span> offset = <span class="number">4</span>*((pixelsWidth*round(y))+round(x));</div><div class="line">        <span class="keyword">if</span> (preR == <span class="number">-1</span>) &#123;</div><div class="line">            preR = bitdata[offset];</div><div class="line">            preG = bitdata[offset+<span class="number">1</span>];</div><div class="line">            preB = bitdata[offset+<span class="number">2</span>];</div><div class="line">            preA = bitdata[offset+<span class="number">3</span>];</div><div class="line">        &#125;<span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">if</span> (preR != bitdata[offset] ||</div><div class="line">                preG != bitdata[offset+<span class="number">1</span>] ||</div><div class="line">                preB != bitdata[offset+<span class="number">2</span>] ||</div><div class="line">                preA != bitdata[offset+<span class="number">3</span>]) &#123;</div><div class="line"></div><div class="line">                x = point.x;</div><div class="line">                y += i;</div><div class="line">                preR = <span class="number">-1</span>, preG = <span class="number">-1</span>, preB = <span class="number">-1</span>, preA = <span class="number">-1</span>;</div><div class="line">            &#125;<span class="keyword">else</span> &#123;</div><div class="line">                x++;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">CGContextRelease</span>(contex);</div><div class="line">    free(bitdata);</div><div class="line">    <span class="keyword">return</span> <span class="built_in">CGPointMake</span>(x, y);</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure></p>
+
+        </div>
+      </article>
+    </div>
+    <!-- Comments -->
+    <div class="container">
+      
+<section id="comment">
+  <!-- <h1 class="title">Comments</h1> -->
+
+  
+</section>
+
+
+    </div>
+    <!-- Pre or Next -->
+    <div class="nav-links">
+      
+      
+        <div class="nav-next">
+          <a href="/2017/03/24/iOS-JSSDK/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
+        </div>
+      
+    </div>
+
+  </div>
+</div>
+
+
+  <!-- Footer -->
+  <!-- Footer-widgets -->
+<div class="footer-widgets">
+  <div class="row inside-wrapper">
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">关于本站</h1>
+        <div class="custom-widget-content">
+          
+          想写什么写什么，blablabla
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Contact</h1>
+        <div class="widget-text">
+          
+            
+              <a href="https://github.com/JaonFanwt" class="icon icon-github" target="_blank">github</a>
+            
+          
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Search</h1>
+        <div class="widget-text">
+          <form onSubmit="return appDaily.submitSearch('')">
+            <p>
+              <input type="text" placeholder="search..." id="homeSearchInput">
+            </p>
+            <!-- <input type="submit" value="GO"> -->
+          </form>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+<!-- Footer -->
+<footer class="site-info">
+  <p>
+    <span>Wtttttt天 &copy; 2017</span>
+    
+      <span class="split">|</span>
+      <span>Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> with Theme <a href="https://github.com/GallenHu/hexo-theme-Daily" target="_blank">Daily</a></span>
+    
+  </p>
+</footer>
+
+
+  <!-- After footer scripts -->
+  <!-- scripts -->
+<script src="/js/app.js"></script>
+
+
+
+</body>
+
+</html>
