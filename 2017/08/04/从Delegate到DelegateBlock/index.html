@@ -147,7 +147,7 @@
 <p>从上述可看出改造前后有一点很大的区别：改造后的委托协议绑定方法是可以替换的，而改造前在类中添加方法的这种就只能用继承或者动态替换方法的办法来替换对应的逻辑的，什么？没看懂？举个栗子：你写了一个代理对应的若干委托方法实现，该段代码将在项目内很多地方被使用，但是有几处将会在某一个或几个委托方法有完全不一样的处理逻辑，如果用传统的delegate处理逻辑，那就需要继承类重写委托方法了，如果有一个对象，能和设置属性一样方便的设置一个block与select的mapping关系，当委托方法被调用时，替换成执行block，那就能轻松解决这个代码重用问题。</p>
 <p>什么？还是没看懂？用代码吧：<br><img src="/2017/08/04/从Delegate到DelegateBlock/delegateBlock_2.png" alt="Alt text"></p>
 <p>PS：WtDelegateProxy类的灵感来至于RACDelegateProxy。</p>
-<p>WtDelegateProxy类只支持一个协议（代码结构更清晰），它有一个绑定selector与block的方法，当绑定完后，delegate调用selector时，会出发消息转发行为，将在内部执行block方法，从而实现delegate到delegateBlock的转换。</p>
+<p>WtDelegateProxy类只支持一个协议（代码结构更清晰），它有一个绑定selector与block的方法，当绑定完后，delegate调用selector时，会触发消息转发行为，将在内部执行block方法，从而实现delegate到delegateBlock的转换。</p>
 <p>流程如图所示：<br><img src="/2017/08/04/从Delegate到DelegateBlock/delegateBlock_3.png" alt="Alt text"></p>
 <p>它能干什么呢？<br>先来看一下iOS端开发最为常见的一个UI组建：UITableView，UITableView是Apple提供的UI滚动单元格控件，可以说是iOS开发中使用频率最高的控件，日常使用的APP诸如QQ、微信、网易新闻等软件中大量使用了该控件，它能给用户带来极佳的用户体验。</p>
 <p>UITableView的性能极高，提供给开发者的API也非常容易上手，它提供了UITableViewDataSource和UITableViewDelegate两个代理类，前者是数据源代理，UITableView会从它委托的代理方法中获取数据，后者是一般代理，UITableView的生命周期事件以及交互事件等都会回调到它委托的代理方法。</p>
