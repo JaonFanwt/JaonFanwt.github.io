@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<!-- Head tag -->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!--Description-->
+  
+  <meta name="description" content="想写什么写什么，blablabla">
+  
+
+  <!--Author-->
+  
+  <meta name="author" content="Wtttttt天">
+  
+
+  <!--Open Graph Title-->
+  
+      <meta property="og:title" content="制作OC与Swift混编的动态framework"/>
+  
+  <!--Open Graph Description-->
+  
+      <meta property="og:description" content="想写什么写什么，blablabla" />
+  
+  <!--Open Graph Site Name-->
+  <meta property="og:site_name" content="Wtttttt天"/>
+  <!--Type page-->
+  
+      <meta property="og:type" content="article" />
+  
+  <!--Page Cover-->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- Title -->
+  
+  <title>制作OC与Swift混编的动态framework - Wtttttt天</title>
+
+
+  <link rel="shortcut icon" href="https://hexo.io/icon/favicon-96x96.png">
+
+  <!-- Custom CSS/Sass -->
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!----------------------------
+  https://github.com/GallenHu/hexo-theme-Daily
+
+ _____            _   _
+|  __ \          (_) | |
+| |  | |   __ _   _  | |  _   _
+| |  | |  / _` | | | | | | | | |
+| |__| | | (_| | | | | | | |_| |
+|_____/   \__,_| |_| |_|  \__, |
+                          __/ |
+                         |___/
+
+    --------------------------->
+
+</head>
+
+
+<body>
+
+  <!-- Nav -->
+  <header class="site-header">
+  <div class="header-inside">
+    <div class="logo">
+      <a href="/" rel="home">
+        
+        <img src="https://hexo.io/logo.svg" alt="Wtttttt天" height="60">
+        
+      </a>
+    </div>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse">
+        <ul class="navbar-nav">
+          
+          
+            <li>
+              <a href="/.">
+                
+                  home
+                
+              </a>
+            </li>
+          
+            <li>
+              <a href="/archives">
+                
+                  archive
+                
+              </a>
+            </li>
+          
+        </ul>
+      </div>
+      <!-- /.navbar-collapse -->
+    </nav>
+    <div class="button-wrap">
+      <button class="menu-toggle">Primary Menu</button>
+    </div>
+  </div>
+</header>
+
+
+  <!-- Main Content -->
+  <div class="content-area">
+  <div class="post">
+    <!-- Post Content -->
+    <div class="container">
+      <article>
+        <!-- Title date & tags -->
+        <div class="post-header">
+          <h1 class="entry-title">
+            制作OC与Swift混编的动态framework
+            
+          </h1>
+          <p class="posted-on">
+          2017-12-06
+          </p>
+          <div class="tags-links">
+            
+              
+            
+          </div>
+        </div>
+        <!-- Post Main Content -->
+        <div class="entry-content">
+          <h1><span id="zhi-zuo-oc-yu-swift-hun-bian-de-dong-tai-framework">制作OC与Swift混编的动态framework</span></h1><p>在iOS开发过程中，会遇到如下场景：</p>
+<ol>
+<li>编写私有库。</li>
+<li>私有库对内开放，对外需要打包成framework或static library。</li>
+</ol>
+<p>注：制作Swift库需是动态framework，本篇介绍都针对framework来展开讨论。</p>
+<p>在Cocoapods还未出现之前，开发都是使用Xcode来手动创建库工程，这种方式较原始且复杂，工程接入源码和framework来调试的步骤太多，不易管理和维护。<br>Cocoapods的出现帮助了开发者管理和创建依赖库，它简单易用，只需要简单的命令和配置就能导入第三方库，或是创建一个带有Demo且带有单元测试的库工程，这样便利的依赖库管理工具极大地提升了开发者的开发效率。</p>
+<p>本文将介绍使用Cocoapods来制作OC与Swift的动态framework。<br>（Cocoapods有一个cocoapods-packager工具，需额外地安装，但实际使用中发现它不是这么的简单易用。）</p>
+<p>以WtCore库工程来举例，打开WtCore.xcworkspace，工程目录结构如下：<br><img src="/2017/12/06/制作OC与Swift混编的动态framework/1512541980320.png" width="50%" height="50%"><br>command+B编译好后，可以右键Show in Finder找到WtCore.framework，目录结构如下：<br><img src="/2017/12/06/制作OC与Swift混编的动态framework/1512542299702.png" width="100%" height="100%"></p>
+<ul>
+<li>Debug-iphoneos是真机的动态framework</li>
+<li>Debug-iphonesimulator是模拟器的动态framework</li>
+</ul>
+<p>将这2个framework合并成一个framework，同时对模拟器和真机进行支持。<br>拷贝这2个framework至tmp目录中，结构如下：<br><img src="/2017/12/06/制作OC与Swift混编的动态framework/1512542727585.png" width="100%" height="100%"></p>
+<p>打开终端，进入到tmp路径下，执行以下命令来合并生成执行文件：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ lipo -create ./Debug-iphoneos/WtCore.framework/WtCore ./Debug-iphonesimulator/WtCore.framework/WtCore -output WtCore</span><br></pre></td></tr></table></figure></p>
+<p>执行完后会在tmp目录中生成合并后的WtCore执行文件，可以使用如下命令查看可执行文件支持的架构：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ lipo -info WtCore.framework/WtCore</span><br></pre></td></tr></table></figure></p>
+<p><img src="/2017/12/06/制作OC与Swift混编的动态framework/1512543011293.png" width="100%" height="100%"></p>
+<p>合并完可执行文件后，继续执行以下命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ cp -a Debug-iphoneos/WtCore.framework ./</span><br><span class="line">$ mv -f WtCore WtCore.framework/WtCore</span><br><span class="line">$ cp -a Debug-iphonesimulator/WtCore.framework/Modules/WtCore.swiftmodule/* WtCore.framework/Modules/WtCore.swiftmodule</span><br></pre></td></tr></table></figure></p>
+<p>此时tmp下的WtCore.framework就是我们要的OC与Swift混合动态framework，该framework依赖的第三方库并未打包到库中，第三方使用时需要额外导入，可以README.md中说明，或是使用Cocoapods来配置该framework的第三方依赖关系。</p>
+<p>这种制作OC与Swift混合动态framework同样适用于制作独立OC或独立Swift的库工程。</p>
+
+        </div>
+      </article>
+    </div>
+    <!-- Comments -->
+    <div class="container">
+      
+<section id="comment">
+  <!-- <h1 class="title">Comments</h1> -->
+
+  
+</section>
+
+
+    </div>
+    <!-- Pre or Next -->
+    <div class="nav-links">
+      
+      
+        <div class="nav-next">
+          <a href="/2017/08/04/从Delegate到DelegateBlock/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
+        </div>
+      
+    </div>
+
+  </div>
+</div>
+
+
+  <!-- Footer -->
+  <!-- Footer-widgets -->
+<div class="footer-widgets">
+  <div class="row inside-wrapper">
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">关于本站</h1>
+        <div class="custom-widget-content">
+          
+          想写什么写什么，blablabla
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Contact</h1>
+        <div class="widget-text">
+          
+            
+              <a href="https://github.com/JaonFanwt" class="icon icon-github" target="_blank">github</a>
+            
+          
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Search</h1>
+        <div class="widget-text">
+          <form onSubmit="return appDaily.submitSearch('')">
+            <p>
+              <input type="text" placeholder="search..." id="homeSearchInput">
+            </p>
+            <!-- <input type="submit" value="GO"> -->
+          </form>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+<!-- Footer -->
+<footer class="site-info">
+  <p>
+    <span>Wtttttt天 &copy; 2017</span>
+    
+      <span class="split">|</span>
+      <span>Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> with Theme <a href="https://github.com/GallenHu/hexo-theme-Daily" target="_blank">Daily</a></span>
+    
+  </p>
+</footer>
+
+
+  <!-- After footer scripts -->
+  <!-- scripts -->
+<script src="/js/app.js"></script>
+
+
+
+</body>
+
+</html>
