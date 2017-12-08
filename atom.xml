@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://fanwt.com/"/>
-  <updated>2017-12-08T02:42:40.004Z</updated>
+  <updated>2017-12-08T07:53:27.503Z</updated>
   <id>http://fanwt.com/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>iOS11中UITableViewCell不能侧滑编辑的诡异问题</title>
+    <link href="http://fanwt.com/2017/12/08/iOS11%E4%B8%ADUITableViewCell%E4%B8%8D%E8%83%BD%E4%BE%A7%E6%BB%91%E7%BC%96%E8%BE%91%E7%9A%84%E8%AF%A1%E5%BC%82%E9%97%AE%E9%A2%98/"/>
+    <id>http://fanwt.com/2017/12/08/iOS11中UITableViewCell不能侧滑编辑的诡异问题/</id>
+    <published>2017-12-08T07:32:01.000Z</published>
+    <updated>2017-12-08T07:53:27.503Z</updated>
+    
+    <content type="html"><![CDATA[<p>组员反馈项目中有一个诡异的问题，在iOS11中，工程中所有页面的UITableViewCell第一次能侧滑编辑，只要停留在该页面，之后再也无法侧滑编辑，但是仍旧能断点到代理方法中。<br>当时第一反应是怀疑工程中大量的Swizzle方法，庞大的工程也不知从何查起，抱着运行项目看看日志提示，碰碰运气的心态run了项目跑在模拟器中，在第一次侧滑编辑时无异样，滚屏退出编辑态，第二次侧滑时，tableview就无法应了，但好在日志中发现了痕迹：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*** NSForwarding: warning: method signature and compiler disagree on struct-return-edness of &apos;prepareWithSwipeDirection:configuration:&apos;.  Signature thinks it does not return a struct, and compiler thinks it does.</span><br></pre></td></tr></table></figure></p><p>大致意思是方法签名描述不一致，也就是约定返回一个struct的，但并没有返回struct类型。</p><p>习惯性的去Google上查找资料发现<a href="https://github.com/Desgard/iOS-Source-Probe/blob/master/Objective-C/Runtime/objc_msgSend%E6%B6%88%E6%81%AF%E4%BC%A0%E9%80%92%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%20-%20%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91.md" target="_blank" rel="noopener">链接</a><br>在其中找到了__forwarding__的分析代码为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">BOOL signatureIsStret = [methodSignature _frameDescriptor]-&gt;returnArgInfo.flags.isStruct;</span><br><span class="line">if (signatureIsStret != isStret) &#123;</span><br><span class="line">    CFLog(kCFLogLevelWarning ,</span><br><span class="line">      @&quot;*** NSForwarding: warning: method signature and compiler disagree on struct-return-edness of &apos;%s&apos;.  Signature thinks it does%s return a struct, and compiler thinks it does%s.&quot;,</span><br><span class="line">      selName,</span><br><span class="line">      signatureIsStret ? &quot;&quot; : not,</span><br><span class="line">      isStret ? &quot;&quot; : not);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>更加怀疑是项目中swizzle的方法惹的祸了</p><p>怀疑的步骤为：</p><ol><li>先怀疑NSObject的methodSignatureForSelector方法，屏蔽掉工程中Swizzle的代码，发现并没解决问题。</li><li>怀疑之前解决数组和字典的nil问题，屏蔽掉所有数组和字典的swizzle方法，发现问题解决。</li><li>一个个大块放开代码检查，最终定位。</li></ol><p>罪魁祸首：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">@implementation NSMutableDictionary (NilSafe)</span><br><span class="line"></span><br><span class="line">+ (void)load &#123;</span><br><span class="line">    static dispatch_once_t onceToken;</span><br><span class="line">    dispatch_once(&amp;onceToken, ^&#123;</span><br><span class="line">        Class class = NSClassFromString(@&quot;__NSDictionaryM&quot;);</span><br><span class="line">        [class gl_swizzleMethod:@selector(setObject:forKeyedSubscript:) withMethod:@selector(gl_setObject:forKeyedSubscript:)];</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)gl_setObject:(id)obj forKeyedSubscript:(id&lt;NSCopying&gt;)key &#123;</span><br><span class="line">    if (!key) &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    if (!obj) &#123;</span><br><span class="line">        obj = [NSNull null];</span><br><span class="line">    &#125;</span><br><span class="line">    [self gl_setObject:obj forKeyedSubscript:key];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure></p><p>拦截了系统的字典，将obj为nil时替换成了NSNull，怀疑是组员从网上拷贝的代码来解决服务端下发数据中有nil的问题。如果是为了解决数组、字典中nil数据导致的crash问题，那判断到!obj时，直接return就好了。</p><p>最终解决方案：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">if (!obj) &#123;</span><br><span class="line">    obj = [NSNull null];</span><br><span class="line">&#125;</span><br><span class="line">// 更改为</span><br><span class="line">if (!obj) &#123;</span><br><span class="line">    return;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>个人觉得NSNull尽量少用，它一般用在闭环逻辑的代码中，也就是自己能掌控的闭环逻辑中，用它来标记、处理空逻辑行为。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;组员反馈项目中有一个诡异的问题，在iOS11中，工程中所有页面的UITableViewCell第一次能侧滑编辑，只要停留在该页面，之后再也无法侧滑编辑，但是仍旧能断点到代理方法中。&lt;br&gt;当时第一反应是怀疑工程中大量的Swizzle方法，庞大的工程也不知从何查起，抱着运行项
+      
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>制作OC与Swift混编的动态framework</title>
