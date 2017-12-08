@@ -149,8 +149,8 @@
 <p>执行完后会在tmp目录中生成合并后的WtCore执行文件，可以使用如下命令查看可执行文件支持的架构：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ lipo -info WtCore.framework/WtCore</span><br></pre></td></tr></table></figure></p>
 <p><img src="/2017/12/06/制作OC与Swift混编的动态framework/1512543011293.png" width="100%" height="100%"></p>
 <p>合并完可执行文件后，继续执行以下命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ cp -a Debug-iphoneos/WtCore.framework ./</span><br><span class="line">$ mv -f WtCore WtCore.framework/WtCore</span><br><span class="line">$ cp -a Debug-iphonesimulator/WtCore.framework/Modules/WtCore.swiftmodule/* WtCore.framework/Modules/WtCore.swiftmodule</span><br></pre></td></tr></table></figure></p>
-<p>此时tmp下的WtCore.framework就是我们要的OC与Swift混合动态framework，该framework依赖的第三方库并未打包到库中，第三方使用时需要额外导入，可以README.md中说明，或是使用Cocoapods来配置该framework的第三方依赖关系。</p>
-<p>这种制作OC与Swift混合动态framework同样适用于制作独立OC或独立Swift的库工程。</p>
+<p>此时tmp下的WtCore.framework就是我们要的OC与Swift混编动态framework，该framework依赖的第三方库并未打包到库中，第三方使用时需要额外导入，可以README.md中说明，或是使用Cocoapods来配置该framework的第三方依赖关系。</p>
+<p>这种制作OC与Swift混合动态framework同样适用于制作独立OC或独立Swift的库工程。<br>最后附上<a href="https://github.com/JaonFanwt/OCTestCoreFramework" target="_blank" rel="noopener">Demo</a></p>
 
         </div>
       </article>
