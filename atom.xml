@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://fanwt.com/"/>
-  <updated>2017-12-08T07:53:27.503Z</updated>
+  <updated>2018-01-23T15:35:41.411Z</updated>
   <id>http://fanwt.com/</id>
   
   <author>
@@ -15,6 +15,50 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>2017总结</title>
+    <link href="http://fanwt.com/2018/01/23/2017%E6%80%BB%E7%BB%93/"/>
+    <id>http://fanwt.com/2018/01/23/2017总结/</id>
+    <published>2018-01-23T14:08:07.000Z</published>
+    <updated>2018-01-23T15:35:41.411Z</updated>
+    
+    <content type="html"><![CDATA[<p>2017年匆匆地进入了年底，一边听着轻盈的日漫歌曲，脑袋里不断闪过这一年所发生的总总，不得不说，真的很感激这一年让我见了很多世面，通过一次次的摔倒、爬起、前进，从中沉淀积累了诸多宝贵的经验，在这过程中心态逐渐的转变和调整是件非常有意思的事。</p><ul><li><p>生活<br>不同的人对生活的理解和看法不一样，个人非常喜欢安静的环境，家就是栖息生活、学习、工作的地方，对此我要求非常高，希望一点一滴都是自己设计和动工完成，于是…<br>今年我仍旧在独自奋战装修，嗯，是的，还在装修ing（PS：2016年我就在动工了），目前看进度非常有可能会持续到2018年5月左右。很多人问自己装修不累吗？工作赚那么多为啥还要自己装呢？嗯，不同的人对生活的理解和看法不一样，人这辈子很短也很长，我希望能经历更多有意思的东西，还在我年少的时候（哈哈哈哈哈😄）。装修那么大的工程，怎么能不累，从最初的铲墙时就体会到了装修师傅的心酸，整个房间要喷水，然后拿铲刀一点点的铲墙皮，铲下来的旧腻子装了应该有十袋蛇皮袋。到后来的刮腻子，一站就是一整天，批刀、铲子刮一天墙，打磨更是灰大到整个房间都是灰蒙蒙的，有时候真的是累到腰都直不起来，手臂也抬不动，晚上睡着后手指就像埋在了混泥土里僵硬的动不了。苦归苦，从中感悟了许多平常当码农时感受不到的道理，生活不易，且行且珍惜，好好地活在当下。<br>衣食行这些日常开销几乎没有变化，不过爱上了坐地铁，嗯，原因是多出来的时间可以用来背单词。</p></li><li><p>学习<br>学到老活到老嘛<br>17年自学能力提升很大，可以一天从早自修到深夜，这一点在我上学的时候都没有过，这样自觉自学考完了许多课程，其中对高数和英语的成绩很满意。<br>18年希望勇敢的参加研究生考试，不管考多少分，至少这辈子不留遗憾。</p></li><li><p>工作<br>参与3个大型项目的核心开发，完成6个SDK的编写，开源了1个个人SDK。<br>参与的项目更多，见识的知识面更加广了，感谢公司有这么好的一个平台得以付出无限的精力和热情。</p></li></ul><p>2018年<br>一个温馨的家<br>一张录取通知书<br>一份很nice的绩效成绩单<br>加油2018！！！</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;2017年匆匆地进入了年底，一边听着轻盈的日漫歌曲，脑袋里不断闪过这一年所发生的总总，不得不说，真的很感激这一年让我见了很多世面，通过一次次的摔倒、爬起、前进，从中沉淀积累了诸多宝贵的经验，在这过程中心态逐渐的转变和调整是件非常有意思的事。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>iOS端集成RN以及踩坑</title>
+    <link href="http://fanwt.com/2018/01/04/iOS%E7%AB%AF%E9%9B%86%E6%88%90RN%E4%BB%A5%E5%8F%8A%E8%B8%A9%E5%9D%91/"/>
+    <id>http://fanwt.com/2018/01/04/iOS端集成RN以及踩坑/</id>
+    <published>2018-01-04T02:41:54.000Z</published>
+    <updated>2018-01-04T07:26:54.470Z</updated>
+    
+    <content type="html"><![CDATA[<h2><span id="zhun-bei-gong-zuo">准备工作</span></h2><h3><span id="da-jian-kai-fa-huan-jing">搭建开发环境</span></h3><h4><span id="an-zhuang-homebrew">安装Homebrew</span></h4><p>Homebrew, Mac系统的包管理器，用于安装NodeJS和一些其他必需的工具软件。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/bin/ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)”</span><br></pre></td></tr></table></figure></p><h4><span id="an-zhuang-node">安装Node</span></h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install node</span><br></pre></td></tr></table></figure><h4><span id="an-zhuang-yarn-react-native-de-ming-ling-xing-gong-ju">安装Yarn、React Native的命令行工具</span></h4><p>Yarn是Facebook提供的替代npm的工具，可以加速node模块的下载。<br>React Native的命令行工具用于执行创建、初始化、更新项目、运行打包服务（packager）等任务。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g yarn react-native-cli</span><br></pre></td></tr></table></figure></p><h4><span id="an-zhuang-watchman">安装Watchman</span></h4><p>Watchman是由Facebook提供的监视文件系统变更的工具。<br>安装此工具可以提高开发时的性能（packager可以快速捕捉文件的变化从而实现实时刷新）。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install watchman</span><br></pre></td></tr></table></figure></p><h4><span id="an-zhuang-flow">安装Flow</span></h4><p>Flow是一个静态的JS类型检查工具。译注：你在很多示例中看到的奇奇怪怪的冒号问号，以及方法参数中像类型一样的写法，都是属于这个flow工具的语法。这一语法并不属于ES标准，只是Facebook自家的代码规范。所以新手可以直接跳过（即不需要安装这一工具，也不建议去费力学习flow相关语法）。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install flow</span><br></pre></td></tr></table></figure></p><p>安装cococapods：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gem install cocoapods</span><br></pre></td></tr></table></figure></p><h3><span id="yuan-you-xiang-mu-ji-cheng-rn">原有项目集成RN</span></h3><h4><span id="cocoapods">Cocoapods</span></h4><p>在Podfile中添加如下代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">rn_path = &apos;../node_modules/react-native&apos;</span><br><span class="line"></span><br><span class="line">pod &apos;yoga&apos;, path: &quot;#&#123;rn_path&#125;/ReactCommon/yoga/yoga.podspec&quot;</span><br><span class="line">pod &apos;React&apos;, path: rn_path, subspecs: [</span><br><span class="line">  &apos;Core&apos;,</span><br><span class="line">  &apos;RCTActionSheet&apos;,</span><br><span class="line">  &apos;RCTAnimation&apos;,</span><br><span class="line">  &apos;RCTGeolocation&apos;,</span><br><span class="line">  &apos;RCTImage&apos;,</span><br><span class="line">  &apos;RCTLinkingIOS&apos;,</span><br><span class="line">  &apos;RCTNetwork&apos;,</span><br><span class="line">  &apos;RCTSettings&apos;,</span><br><span class="line">  &apos;RCTText&apos;,</span><br><span class="line">  &apos;RCTVibration&apos;,</span><br><span class="line">  &apos;RCTWebSocket&apos;,</span><br><span class="line">  &apos;BatchedBridge&apos;</span><br><span class="line">]</span><br></pre></td></tr></table></figure></p><h3><span id="xin-xiang-mu-ji-cheng-rn">新项目集成RN</span></h3><p>使用react-native命令工具创建新工程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">react-native init AwesomeProject</span><br></pre></td></tr></table></figure></p><h2><span id="xiang-mu-qi-dong-qian-de-yi-huo-dian">项目启动前的疑惑点</span></h2><ol><li><p>谁来做容器？</p></li><li><p>Native跳转RN、RN跳转Native<br>客户端作为容器</p><ul><li>Native跳转RN，在初始化RctRootView时带入参数指定子页面</li><li>RN跳转Native，调用bridge中约定好的扩展方法<br>RN作为容器</li><li>Native跳转RN，调用bridge中约定好的扩展方法</li><li>RN跳转Native，RN内部处理 或 调用bridge中约定好的扩展方法</li></ul></li></ol><ol><li><p>Native调用RN、RN调用Native<br>Native调用RN</p><ul><li>初始化RCTRootView时，可以传参指定加载页面</li><li>给RN发送广播通知</li><li>扩展组件，组件中事件回调传参给RN</li></ul><p>RN调用Native</p><ul><li>Native通过实现RCTBridgeModule添加扩展</li></ul></li><li><p>js.bundle包过大，加载速度慢，导致用户可见白屏问题，如何解决？<br>分包加载解决，原理很简单：先加载重要的部分，后加载优先级低的部分</p></li><li><p>Native和RN约定数据接口以什么方式输出<br>以json格式通信</p></li><li><p>Native提供哪些基础能力给到RN</p><ul><li>open、close</li><li>fetch、upload、download（灵活，可设置header、cookies）</li><li>webview、JSSDK</li><li>扩展组件，譬如：书架、选择相册、图片展示、保存图片</li><li>各种广播通知，譬如：登录回调</li><li>设备信息等</li><li>Debug工具</li></ul></li><li><p>路由协议</p><ul><li>参考RESTful接口规范</li><li>小写开头，驼峰写法，使用下杠_，不使用中杠-</li></ul></li><li><p>热更新<br>未做</p></li></ol><h2><span id="cai-guo-de-keng">踩过的坑</span></h2><p>一、源<br>由于qiang，很多库都需要**才可以下载的到，所以国内的很多教程都是教大家切换源来解决不能下载的问题。<br>譬如切换npm源为淘宝镜像：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm config set registry https://registry.npm.taobao.org --global</span><br><span class="line">npm config set disturl https://npm.taobao.org/dist --global</span><br></pre></td></tr></table></figure></p><p>我遇到过boost库淘宝镜像不全的问题，导致RN无法正常编译。<br>解决办法：删除本地错误boost库，还原源重新下载。</p><p>二、RN缓存</p><p>当切换不同的RN项目后，由于RN有缓存，导致RN服务无法启动，用以下命令清除缓存：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yarn start --reset-cache</span><br><span class="line">// OR</span><br><span class="line">npm start -- -- reset-cache</span><br></pre></td></tr></table></figure></p><p>三、谁做容器</p><p>客户端作为容器</p><ol><li>多个RN（各自独立bridge）页面，开启Chrome Debug模式时，会因为端口被占用，导致红屏。</li><li>多个RN（共享bridge）页面，JS端错误导致页面同步，误以为由bridge生成出的RNView会同步显示。</li><li>多个RN页面会导致前端同学不好控制页面的状态切换。</li></ol><p>RN作为容器</p><ol><li>window.rootViewController发生改变，更改为UINavigationController。书架View将作为标签的形式提供给前端使用，由于RN作为容器，容器环境不可知，所以将书架Controller单独放到一个新的UINavigationController中。这种UINavigationController嵌套在以往的开放中几乎没用过，存在一定的风险。</li><li>当RN页加载不出来时，即容器初始化失败时，整个APP都无法显示。</li></ol>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2&gt;&lt;span id=&quot;zhun-bei-gong-zuo&quot;&gt;准备工作&lt;/span&gt;&lt;/h2&gt;&lt;h3&gt;&lt;span id=&quot;da-jian-kai-fa-huan-jing&quot;&gt;搭建开发环境&lt;/span&gt;&lt;/h3&gt;&lt;h4&gt;&lt;span id=&quot;an-zhuang-homebrew&quot;
+      
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>iOS11中UITableViewCell不能侧滑编辑的诡异问题</title>
