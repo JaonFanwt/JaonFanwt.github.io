@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<!-- Head tag -->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!--Description-->
+  
+  <meta name="description" content="想写什么写什么，blablabla">
+  
+
+  <!--Author-->
+  
+  <meta name="author" content="Wtttttt天">
+  
+
+  <!--Open Graph Title-->
+  
+      <meta property="og:title" content="Yogakit介绍"/>
+  
+  <!--Open Graph Description-->
+  
+      <meta property="og:description" content="想写什么写什么，blablabla" />
+  
+  <!--Open Graph Site Name-->
+  <meta property="og:site_name" content="Wtttttt天"/>
+  <!--Type page-->
+  
+      <meta property="og:type" content="article" />
+  
+  <!--Page Cover-->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- Title -->
+  
+  <title>Yogakit介绍 - Wtttttt天</title>
+
+
+  <link rel="shortcut icon" href="https://hexo.io/icon/favicon-96x96.png">
+
+  <!-- Custom CSS/Sass -->
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!----------------------------
+  https://github.com/GallenHu/hexo-theme-Daily
+
+ _____            _   _
+|  __ \          (_) | |
+| |  | |   __ _   _  | |  _   _
+| |  | |  / _` | | | | | | | | |
+| |__| | | (_| | | | | | | |_| |
+|_____/   \__,_| |_| |_|  \__, |
+                          __/ |
+                         |___/
+
+    --------------------------->
+
+</head>
+
+
+<body>
+
+  <!-- Nav -->
+  <header class="site-header">
+  <div class="header-inside">
+    <div class="logo">
+      <a href="/" rel="home">
+        
+        <img src="https://hexo.io/logo.svg" alt="Wtttttt天" height="60">
+        
+      </a>
+    </div>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse">
+        <ul class="navbar-nav">
+          
+          
+            <li>
+              <a href="/.">
+                
+                  home
+                
+              </a>
+            </li>
+          
+            <li>
+              <a href="/archives">
+                
+                  archive
+                
+              </a>
+            </li>
+          
+        </ul>
+      </div>
+      <!-- /.navbar-collapse -->
+    </nav>
+    <div class="button-wrap">
+      <button class="menu-toggle">Primary Menu</button>
+    </div>
+  </div>
+</header>
+
+
+  <!-- Main Content -->
+  <div class="content-area">
+  <div class="post">
+    <!-- Post Content -->
+    <div class="container">
+      <article>
+        <!-- Title date & tags -->
+        <div class="post-header">
+          <h1 class="entry-title">
+            Yogakit介绍
+            
+          </h1>
+          <p class="posted-on">
+          2018-06-12
+          </p>
+          <div class="tags-links">
+            
+              
+            
+          </div>
+        </div>
+        <!-- Post Main Content -->
+        <div class="entry-content">
+          <h1><span id="yogakit">YogaKit</span></h1><h2><span id="jie-shao">介绍</span></h2><p>YogaKit是Facebook开源的一个CSS3/Flexbox跨平台布局引擎。</p>
+<h2><span id="ios-yuan-sheng-bu-ju-jian-yao-shuo-ming">iOS原生布局简要说明</span></h2><p>iOS中有2种原生布局方式+2种自动布局利器</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">布局方式名称</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>绝对布局</strong></td>
+<td style="text-align:left">声明该元素在父视图中绝对位置</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>相对布局</strong></td>
+<td style="text-align:left">声明该元素相对父视图或其他元素相对位置</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">自动布局名称</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>autoresizing</strong></td>
+<td style="text-align:left">标记自己在父视图中的位置、以及相对父视图缩放时是否按比例缩放</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>autolayout</strong></td>
+<td style="text-align:left">标记自己相对于父视图或同级其他元素的位置、大小</td>
+</tr>
+</tbody>
+</table>
+<h3><span id="autoresizing">autoresizing</span></h3><p>autoresizing提供了7个布局枚举值，可以组合使用它们完成简单的自动布局。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">枚举值</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>UIViewAutoresizingNone</strong></td>
+<td style="text-align:left">不会随父视图的改变而改变</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>UIViewAutoresizingFlexibleLeftMargin</strong></td>
+<td style="text-align:left">自动调整view与父视图左边距，以保证右边距不变</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>UIViewAutoresizingFlexibleWidth</strong></td>
+<td style="text-align:left">自动调整view的宽度，保证左边距和右边距不变</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>UIViewAutoresizingFlexibleRightMargin</strong></td>
+<td style="text-align:left">自动调整view与父视图右边距，以保证左边距不变</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>UIViewAutoresizingFlexibleTopMargin</strong></td>
+<td style="text-align:left">自动调整view与父视图上边距，以保证下边距不变</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>UIViewAutoresizingFlexibleHeight</strong></td>
+<td style="text-align:left">自动调整view的高度，以保证上边距和下边距不变</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>UIViewAutoresizingFlexibleBottomMargin</strong></td>
+<td style="text-align:left">自动调整view与父视图的下边距，以保证上边距不变</td>
+</tr>
+</tbody>
+</table>
+<p>autoresizing自动布局方案的缺点很明显，它只能做简单的自动布局适配，当视觉需求复杂时，代码中将会出现大量的if else判断语句。</p>
+<h3><span id="autolayout">autolayout</span></h3><p>autolayout是Apple在iOS6种推出的自动布局方案，给每一个UI元素都添加一套相对于父元素或同级其他元素位置、大小的约束，按照这些约束将UI元素渲染在不同分辨率下，呈现的排版是一样的。</p>
+<p>Apple起初的想法是好的，因为这样强约束的布局方案可以有效减少UI嵌套层级，在早年硬件设备性能不是那么好的时候，这种布局方案发挥了极大的作用，但随着硬件性能不断提升，这种布局方案在性能上的优势越来越不明显。</p>
+<p>autolayout最大的问题在于程序员需要精确的知道每一个UI元素的约束关系，当页面约束很复杂的时候，对程序员的细心和耐心是极大的考验。然而这根本不算是最严重的问题，一般页面都由若干个组件拼装而成，autolayout最可怕的是不支持热插拔组件，即不可以销毁一个有其他组件依赖该组件约束的组件，程序员如果想要“删除”一个组件，需要添加一个引用指向该组件的宽或高，当需要“删除”时，将该变量设为0，你以为就这么简单的完了？如果再将该组件“插入”回原处呢？</p>
+<h2><span id="flexbox-jie-jue-liao-shi-me">Flexbox解决了什么？</span></h2><blockquote>
+<ul>
+<li>方向性 （传统布局方向是从左到右，从上至下）</li>
+<li>弹性伸缩 （传统尺寸定义是通过像素等来精确定义）</li>
+<li>元素对齐（可以做到插拔）</li>
+</ul>
+</blockquote>
+<p>从上述几点看来，它似乎完美的解决了iOS原生布局开发效率低的问题，但它会增加页面的嵌套层级关系，在硬件性能饱和的情况下用空间换取开发效率。</p>
+<h2><span id="flexbox-ji-ben-gai-nian">Flexbox基本概念</span></h2><p>如果元素采用Flex进行布局，那么这个元素就可以称为Flex容器（Flex container），元素的所有子元素称为Flex项目（Flex item）。</p>
+<p>下图为Flexbox模型图：<br><img src="http://yangjh.oschina.io/front-end/images/CSS3-Flexbox-Model.jpg" alt="Alt text"></p>
+<h3><span id="ji-ge-zhu-yu">几个术语</span></h3><blockquote>
+<ul>
+<li>main axis：水平主轴</li>
+<li>main-start：主轴开始位置，与边框的交叉点</li>
+<li>main-end：主轴的结束位置</li>
+<li>cross axis：垂直交叉轴</li>
+<li>cross-start：交叉轴的开始位置</li>
+<li>cross-end：交叉轴的结束位置</li>
+<li>main size：单个项目占据的主轴空间</li>
+<li>cross size：单个项目占据的交叉轴空间</li>
+</ul>
+</blockquote>
+<h2><span id="zai-ios-duan-shi-yong-yogakit-bu-ju">在iOS端使用YogaKit布局</span></h2><p>将一个View开启yoga布局<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[view configureLayoutWithBlock:^(YGLayout *_Nonnull layout) &#123;</span><br><span class="line">    layout.isEnabled = YES;</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure></p>
+<h3><span id="flexdirection">flexDirection</span></h3><p>在yoga中，API将所有Flexbox样式属性中的中划线去掉，例如flex-direction改为flexDirection。</p>
+<p>flexDirection属性决定主轴的方向（即item的排列方向）。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">名称</th>
+<th style="text-align:left">yoga枚举名</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>column</strong></td>
+<td style="text-align:left">YGFlexDirectionColumn</td>
+<td style="text-align:left">UIView默认值，主轴为垂直方向</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>columnReverse</strong></td>
+<td style="text-align:left">YGFlexDirectionColumnReverse</td>
+<td style="text-align:left">主轴为垂直方向，起点在底部</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>row</strong></td>
+<td style="text-align:left">YGFlexDirectionRow</td>
+<td style="text-align:left">主轴为水平方向</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>rowReverse</strong></td>
+<td style="text-align:left">YGFlexDirectionRowReverse</td>
+<td style="text-align:left">主轴为水平方向，起点在右端</td>
+</tr>
+</tbody>
+</table>
+<p><img src="http://yangjh.oschina.io/front-end/images/flex-direction-row.png" alt="Alt text"><br>主轴为水平方向，起点在左端</p>
+<p><img src="http://yangjh.oschina.io/front-end/images/flex-direction-row-reverse.png" alt="Alt text"><br>主轴为水平方向，起点在右端</p>
+<p><img src="http://yangjh.oschina.io/front-end/images/flex-direction-column.png" alt="Alt text"><br>主轴为垂直方向，起点在上端</p>
+<p><img src="http://yangjh.oschina.io/front-end/images/flex-direction-column-reverse.png" alt="Alt text"><br>主轴为垂直方向，起点在下端</p>
+<h3><span id="flexwrap">flexWrap</span></h3><p>flexWrap属性决定内容在抽线上排列不下的换行方式。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">名称</th>
+<th style="text-align:left">yoga枚举名</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>nowrap</strong></td>
+<td style="text-align:left">YGWrapNoWrap</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>wrap</strong></td>
+<td style="text-align:left">YGWrapWrap</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>wrapReverse</strong></td>
+<td style="text-align:left">YGWrapWrapReverse</td>
+</tr>
+</tbody>
+</table>
+<p><strong>父容器按行排列</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[view configureLayoutWithBlock:^(YGLayout *_Nonnull layout) &#123;</span><br><span class="line">    layout.isEnabled = YES;</span><br><span class="line">    layout.direction = YGFlexDirectionRow;</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://yangjh.oschina.io/front-end/images/flex-wrap-nowrap.png" alt="Alt text"><br>nowrap不换行</p>
+<p><img src="http://yangjh.oschina.io/front-end/images/flex-wrap-wrap.png" alt="Alt text"><br>wrap换行</p>
+<p><img src="http://yangjh.oschina.io/front-end/images/flex-wrap-wrap-reverse.png" alt="Alt text"><br>wrapReverse，起点在主轴底部</p>
+<h3><span id="justifycontent">justifyContent</span></h3><p>justifyContent属性定义项目在主轴上的对齐方式。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">名称</th>
+<th style="text-align:left">yoga枚举名</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>start</strong></td>
+<td style="text-align:left">YGJustifyFlexStart</td>
+<td style="text-align:left">左对齐</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>center</strong></td>
+<td style="text-align:left">YGJustifyCenter</td>
+<td style="text-align:left">居中</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>end</strong></td>
+<td style="text-align:left">YGJustifyFlexEnd</td>
+<td style="text-align:left">右对齐</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>spaceBetween</strong></td>
+<td style="text-align:left">YGJustifySpaceBetween</td>
+<td style="text-align:left">两端对齐，item之间的间隔相等</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>spaceAround</strong></td>
+<td style="text-align:left">YGJustifySpaceAround</td>
+<td style="text-align:left">每个item两侧的间隔相等</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>spaceEvenly</strong></td>
+<td style="text-align:left">YGJustifySpaceEvenly</td>
+<td style="text-align:left">左右边距和每个item之间的间隔一致</td>
+</tr>
+</tbody>
+</table>
+<p><strong>父容器按行排列</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[view configureLayoutWithBlock:^(YGLayout *_Nonnull layout) &#123;</span><br><span class="line">    layout.isEnabled = YES;</span><br><span class="line">    layout.direction = YGFlexDirectionRow;</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://yangjh.oschina.io/front-end/images/justify-content-flex-start.png" alt="Alt text"><br>start，左对齐</p>
+<p><img src="http://yangjh.oschina.io/front-end/images/justify-content-center.png" alt="Alt text"><br>center，居中</p>
+<p><img src="http://yangjh.oschina.io/front-end/images/justify-content-flex-end.png" alt="Alt text"><br>end，右对齐</p>
+<p><img src="http://yangjh.oschina.io/front-end/images/justify-content-space-between.png" alt="Alt text"><br>spaceBetween，两端对齐，item之间的间隔相等</p>
+<p><img src="http://yangjh.oschina.io/front-end/images/justify-content-space-around.png" alt="Alt text"><br>spaceAround，每个item两侧的间隔相等</p>
+<p><img src="https://s1.ax1x.com/2018/06/11/CqXnmR.png" alt="Alt text"><br>spaceEvenly，左右边距和每个item之间的间隔一致</p>
+<h3><span id="alignitems">alignItems</span></h3><p>align-items属性定义项目在交叉轴上的对齐方式。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">名称</th>
+<th style="text-align:left">yoga枚举名</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>flexStart</strong></td>
+<td style="text-align:left">YGAlignFlexStart</td>
+<td style="text-align:left">交叉轴的起点对齐</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>flexEnd</strong></td>
+<td style="text-align:left">YGAlignFlexEnd</td>
+<td style="text-align:left">交叉轴的终点对齐</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>center</strong></td>
+<td style="text-align:left">YGAlignCenter</td>
+<td style="text-align:left">交叉轴的中点对齐</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>baseline</strong></td>
+<td style="text-align:left">YGAlignBaseline</td>
+<td style="text-align:left">项目的第一行文字的基线对齐</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>stretch</strong></td>
+<td style="text-align:left">YGAlignStretch</td>
+<td style="text-align:left">如果项目未设置高度或设为auto，将占满整个容器的高度</td>
+</tr>
+</tbody>
+</table>
+<p><strong>父容器按行排列</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[view configureLayoutWithBlock:^(YGLayout *_Nonnull layout) &#123;</span><br><span class="line">    layout.isEnabled = YES;</span><br><span class="line">    layout.direction = YGFlexDirectionRow;</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://yangjh.oschina.io/front-end/images/align-items-flex-start.png" alt="Alt text"><br>flexStart，交叉轴的起点对齐</p>
+<p><img src="http://yangjh.oschina.io/front-end/images/align-items-flex-end.png" alt="Alt text"><br>flexEnd，交叉轴的终点对齐</p>
+<p><img src="http://yangjh.oschina.io/front-end/images/align-items-center.png" alt="Alt text"><br>center，交叉轴的中点对齐</p>
+<p><img src="http://yangjh.oschina.io/front-end/images/align-items-baseline.png" alt="Alt text"><br>baseline，项目的第一行文字的基线对齐</p>
+<p><img src="http://yangjh.oschina.io/front-end/images/align-items-stretch.png" alt="Alt text"><br>stretch，如果项目未设置高度或设为auto，将占满整个容器的高度</p>
+<h3><span id="aligncontent">alignContent</span></h3><p>align-content定义了多根轴线的对齐方式。如果项目只有一根轴线，该属性不起作用。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">名称</th>
+<th style="text-align:left">yoga枚举名</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>flexStart</strong></td>
+<td style="text-align:left">YGAlignFlexStart</td>
+<td style="text-align:left">与交叉轴的起点对齐</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>flexEnd</strong></td>
+<td style="text-align:left">YGAlignFlexEnd</td>
+<td style="text-align:left">与交叉轴的终点对齐</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>center</strong></td>
+<td style="text-align:left">YGAlignCenter</td>
+<td style="text-align:left">与交叉轴的中点对齐</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>spaceBetween</strong></td>
+<td style="text-align:left">YGJustifySpaceBetween</td>
+<td style="text-align:left">与交叉轴两端对齐，轴线之间的间隔平均分布</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>spaceAround</strong></td>
+<td style="text-align:left">YGJustifySpaceAround</td>
+<td style="text-align:left">每根轴线两侧的间隔都相等</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>stretch</strong></td>
+<td style="text-align:left">YGAlignStretch</td>
+<td style="text-align:left">轴线占满整个交叉轴</td>
+</tr>
+</tbody>
+</table>
+<p><strong>父容器按行排列</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[view configureLayoutWithBlock:^(YGLayout *_Nonnull layout) &#123;</span><br><span class="line">    layout.isEnabled = YES;</span><br><span class="line">    layout.direction = YGFlexDirectionRow;</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://yangjh.oschina.io/front-end/images/align-content-flex-start.png" alt="Alt text"><br>flexStart，与交叉轴的起点对齐</p>
+<p><img src="http://yangjh.oschina.io/front-end/images/align-content-flex-end.png" alt="Alt text"><br>flexEnd，与交叉轴的终点对齐</p>
+<p><img src="http://yangjh.oschina.io/front-end/images/align-content-center.png" alt="Alt text"><br>center，与交叉轴的中点对齐</p>
+<p><img src="http://yangjh.oschina.io/front-end/images/align-content-space-between.png" alt="Alt text"><br>spaceBetween，与交叉轴两端对齐，轴线之间的间隔平均分布</p>
+<p><img src="http://yangjh.oschina.io/front-end/images/align-content-space-around.png" alt="Alt text"><br>spaceAround，每根轴线两侧的间隔都相等</p>
+<p><img src="http://yangjh.oschina.io/front-end/images/align-content-stretch.png" alt="Alt text"><br>stretch，轴线占满整个交叉轴</p>
+<h3><span id="flexgrow">flexGrow</span></h3><p>flex-grow属性定义项目的放大比例，默认为0，即如果存在剩余空间，也不放大。</p>
+<p><strong>父容器按行排列</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[view configureLayoutWithBlock:^(YGLayout *_Nonnull layout) &#123;</span><br><span class="line">    layout.isEnabled = YES;</span><br><span class="line">    layout.direction = YGFlexDirectionRow;</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://yangjh.oschina.io/front-end/images/flex-grow.png" alt="Alt text"><br>如果所有项目的flex-grow属性都为1，则它们将等分剩余空间（如果有的话）。如果一个项目的flex-grow属性为2，其他项目都为1，则前者占据的剩余空间将比其他项多一倍</p>
+<h3><span id="flexshrink">flexShrink</span></h3><p>flex-shrink属性定义了项目的缩小比例，默认为1，即如果空间不足，该项目将缩小。</p>
+<p><strong>父容器按行排列</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[view configureLayoutWithBlock:^(YGLayout *_Nonnull layout) &#123;</span><br><span class="line">    layout.isEnabled = YES;</span><br><span class="line">    layout.direction = YGFlexDirectionRow;</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://yangjh.oschina.io/front-end/images/flex-shrink.png" alt="Alt text"><br>如果所有项目的flex-shrink属性都为1，当空间不足时，都将等比例缩小。如果一个项目的flex-shrink属性为0，其他项目都为1，则空间不足时，前者不缩小。<br>负值对该属性无效。</p>
+<h3><span id="alignself">alignSelf</span></h3><p>align-self属性允许单个项目有与其他项目不一样的对齐方式，可覆盖align-items属性。默认值为auto，表示继承父元素的align-items属性，如果没有父元素，则等同于stretch。</p>
+<h3><span id="flexbasis">flexBasis</span></h3><p>flex-basis属性定义了在分配多余空间之前，项目占据的主轴空间（main size）。浏览器根据这个属性，计算主轴是否有多余空间。它的默认值为auto，即项目的本来大小。</p>
+
+        </div>
+      </article>
+    </div>
+    <!-- Comments -->
+    <div class="container">
+      
+<section id="comment">
+  <!-- <h1 class="title">Comments</h1> -->
+
+  
+</section>
+
+
+    </div>
+    <!-- Pre or Next -->
+    <div class="nav-links">
+      
+      
+        <div class="nav-next">
+          <a href="/2018/01/23/2017总结/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
+        </div>
+      
+    </div>
+
+  </div>
+</div>
+
+
+  <!-- Footer -->
+  <!-- Footer-widgets -->
+<div class="footer-widgets">
+  <div class="row inside-wrapper">
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">关于本站</h1>
+        <div class="custom-widget-content">
+          
+          想写什么写什么，blablabla
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Contact</h1>
+        <div class="widget-text">
+          
+            
+              <a href="https://github.com/JaonFanwt" class="icon icon-github" target="_blank">github</a>
+            
+          
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Search</h1>
+        <div class="widget-text">
+          <form onSubmit="return appDaily.submitSearch('')">
+            <p>
+              <input type="text" placeholder="search..." id="homeSearchInput">
+            </p>
+            <!-- <input type="submit" value="GO"> -->
+          </form>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+<!-- Footer -->
+<footer class="site-info">
+  <p>
+    <span>Wtttttt天 &copy; 2018</span>
+    
+      <span class="split">|</span>
+      <span>Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> with Theme <a href="https://github.com/GallenHu/hexo-theme-Daily" target="_blank">Daily</a></span>
+    
+  </p>
+</footer>
+
+
+  <!-- After footer scripts -->
+  <!-- scripts -->
+<script src="/js/app.js"></script>
+
+
+
+</body>
+
+</html>

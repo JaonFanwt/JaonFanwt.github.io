@@ -131,7 +131,63 @@
         </div>
         <!-- Post Main Content -->
         <div class="entry-content">
-          <p>当前从事阅读类产品开发，开发过程中遇到产品需要在阅读渲染页加各种与阅读正文无关的一些增强用户粘性需求，好比添加：章评、段评、打赏等酷炫的界面。</p>
+          <p>DTCoreText库是iOS端富文本渲染库，开发阅读类产品时可以使用该库进行富文本渲染，它提供了CSS样式解析和HTML富文本样式的排版，支持图片、视频这类附件内容的混合排版。</p>
+<h2><span id="jian-dan-jie-shao">简单介绍</span></h2><p>它的底层使用的Apple提供的CoreText库，命名几乎和CoreText库保持一致，上手简单快速，步骤十分简单容易：</p>
+<ol>
+<li><p>加载CSS样式。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span>* cssPath = [[<span class="built_in">NSBundle</span> mainBundle] pathForResource:<span class="string">@"style"</span> ofType:<span class="string">@"css"</span>];</span><br><span class="line"><span class="built_in">NSString</span>* cssString = [<span class="built_in">NSString</span> stringWithContentsOfFile:cssPath encoding:<span class="built_in">NSUTF8StringEncoding</span> error:<span class="literal">nil</span>] ;</span><br><span class="line">DTCSSStylesheet* css = [[DTCSSStylesheet alloc] initWithStyleBlock:cssString];</span><br><span class="line">[[DTCSSStylesheet defaultStyleSheet] mergeStylesheet:css];</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>加载HTML内容，将它转换为富文本对象。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *htmlString = <span class="string">@"TODO"</span>;</span><br><span class="line"><span class="built_in">NSData</span> *data = [htmlString dataUsingEncoding:<span class="built_in">NSUTF8StringEncoding</span>];</span><br><span class="line"><span class="built_in">NSAttributedString</span>* attributedContent = [[<span class="built_in">NSAttributedString</span> alloc] initWithHTMLData:data</span><br><span class="line">                                                                                 options:<span class="literal">nil</span></span><br><span class="line">                                                                      documentAttributes:<span class="literal">nil</span>];</span><br><span class="line">DTCoreTextLayouter* layouter = [[DTCoreTextLayouter alloc] initWithAttributedString:attributedContent];</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>生成渲染对象。（分页和不分页的区别在于生成渲染对象时指定的分页高度，不分页需要设置为CGFLOAT_HEIGHT_UNKNOWN）</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 假设画布为屏幕大小，不分页，所有内容在一页显示</span></span><br><span class="line"><span class="built_in">NSInteger</span> position = <span class="number">0</span>;</span><br><span class="line"><span class="built_in">CGRect</span> rect = [[<span class="built_in">UIScreen</span> mainScreen] bounds];</span><br><span class="line">rect.size.height = <span class="built_in">CGFLOAT_HEIGHT_UNKNOWN</span>;</span><br><span class="line">DTCoreTextLayoutFrame *layoutFrame = [dtLayouter layoutFrameWithRect:rect range:<span class="built_in">NSMakeRange</span>(position, <span class="number">0</span>)]; <span class="comment">// 渲染对象</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 假设画布为屏幕大小，按照屏幕大小分页</span></span><br><span class="line"><span class="built_in">NSInteger</span> position = <span class="number">0</span>;</span><br><span class="line"><span class="built_in">CGRect</span> rect = [[<span class="built_in">UIScreen</span> mainScreen] bounds];</span><br><span class="line">DTCoreTextLayoutFrame *layoutFrame = [dtLayouter layoutFrameWithRect:rect range:<span class="built_in">NSMakeRange</span>(position, <span class="number">0</span>)]; <span class="comment">// 渲染对象</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>上面代码中使用了它提供的一个简单易懂的分页API：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> Creates a layout frame with a given rectangle and string range. The layouter fills the layout frame with as many lines as fit. You can query [DTCoreTextLayoutFrame visibleStringRange] for the range the fits and create another layout frame that continues the text from there to create multiple pages, for example for an e-book.</span><br><span class="line"> @param frame The rectangle to fill with text</span><br><span class="line"> @param range The string range to fill, pass &#123;0,0&#125; for the entire string (as much as fits)</span><br><span class="line"> */</span><br><span class="line">- (DTCoreTextLayoutFrame *)layoutFrameWithRect:(CGRect)frame range:(NSRange)range;</span><br></pre></td></tr></table></figure></p>
+<p>该API给定一个frame大小，然后告诉它从什么range开始分页，返回切好的富文本渲染对象，该对象包含了该页所有渲染的lines和attachments对象，将DTCoreTextLayoutFrame设置到DTAttributedTextContentView中，即可展示出分页的富文本内容。</p>
+<ol>
+<li><p>将渲染对象画在视图上。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">DTAttributedTextContentView *attributedTextContentView = [DTAttributedTextContentView new];</span><br><span class="line">attributedTextContentView.frame = [[<span class="built_in">UIScreen</span> mainScreen] bounds];</span><br><span class="line">attributedTextContentView.layoutFrame = layoutFrame;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>附件的处理<br>如果内容中有附件：图片、视频、占位，需要在代理回调中返回UIView，该view的坐标和大小是在HTML中提前指定好的。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">UIView</span> *)attributedTextContentView:(DTAttributedTextContentView *)attributedTextContentView viewForAttachment:(DTTextAttachment *)attachment frame:(<span class="built_in">CGRect</span>)frame &#123;</span><br><span class="line">    <span class="keyword">if</span> ([attachment isKindOfClass:[DTIframeTextAttachment <span class="keyword">class</span>]]) &#123;</span><br><span class="line">        DTWebVideoView *videoView = [[DTWebVideoView alloc] initWithFrame:frame];</span><br><span class="line">        videoView.attachment = attachment;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> videoView;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> ([attachment isKindOfClass:[DTObjectTextAttachment <span class="keyword">class</span>]]) &#123;</span><br><span class="line">        <span class="comment">// somecolorparameter has a HTML color</span></span><br><span class="line">        <span class="built_in">NSString</span> *colorName = [attachment.attributes objectForKey:<span class="string">@"somecolorparameter"</span>];</span><br><span class="line">        <span class="built_in">UIColor</span> *someColor = DTColorCreateWithHTMLName(colorName);</span><br><span class="line"></span><br><span class="line">        <span class="built_in">UIView</span> *someView = [[<span class="built_in">UIView</span> alloc] initWithFrame:frame];</span><br><span class="line">        someView.backgroundColor = someColor;</span><br><span class="line">        someView.layer.borderWidth = <span class="number">1</span>;</span><br><span class="line">        someView.layer.borderColor = [<span class="built_in">UIColor</span> blackColor].CGColor;</span><br><span class="line"></span><br><span class="line">        someView.accessibilityLabel = colorName;</span><br><span class="line">        someView.isAccessibilityElement = <span class="literal">YES</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> someView;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>仅需5步就可完成富文本的排版渲染，是不是简单且高效？</p>
+<p>为了增加用户粘性，在每个章节末页增加作者头像、昵称、感言和本章精彩评论，营造一个良好的社区环境，引起读者的共鸣。在开发章末非正文的附加页（作家感言、精彩评论、推荐内容等自定页）时，技术预言了不同的几种技术方案：</p>
+<ol>
+<li>正文页和附加页都使用DTCoreText进行排版渲染。该种技术实现方式在技术预言过程中发现，随着页面复杂度的提高，曲线陡升式的提高了附加页的开发成本，大大增加开发人员的学习成本，且DTCoreText支持的CSS样式和HTML标签非常有限，如果遇到设计稿中复杂的排版样式，这种风险无意是颗定时炸弹，最终将会导致项目难以扩展和维护。</li>
+<li><p>正文页使用DTCoreText排版渲染，附加页使用传统的UIView开发方式，该种技术实现方式有2种完全不一样的解耦实现方案：</p>
+<ul>
+<li><p>方案一：附加页自带分页算法，即编写附加页的开发人员在编写UI时，需要提供一个分页算法，将其拼接到正文页末。该方案对开发人员对分页算法技术要求较高，需要计算每行的排版坐标，在分页计算时对每行进行坐标位置计算，最终确定每页填充的渲染内容。</p>
+</li>
+<li><p>方案二：附加页不自带分页算法，由一个公共的切页算法对附加页进行页面切分，需要抽象出分页的规则，定制一套附加页UI开发标准。该方案对开发人员要求较低，开发人员无需了解分页排版算法，按照UI开发标准完成组件开发后，交由阅读开发人员编写的统一切页算法器完成附加页接入正文页末。</p>
+</li>
+</ul>
+<p>方案二更优不是吗？任何开发人员都能写阅读章末页的附加UI，从此再也不害怕产品大大对章末附加页有天马行空的想法了，是不是很赞？</p>
+</li>
+</ol>
+<h2><span id="que-ding-fang-an-qian-de-yi-wen">确定方案前的疑问</span></h2><ol>
+<li>真的有一种通用的算法来切分任意的附加页吗？</li>
+<li>它是否真的不需要附加页开发参与到分页算法的开发中？</li>
+<li>它是否能满足产品天马行空的想法呢?</li>
+<li>通常一个通用的算法多多少少会在性能上有一定的损耗，这个损耗在用户侧是否能忽略不计呢？</li>
+<li>它能否成为SDK，提供给其他项目使用？</li>
+</ol>
+<h2><span id="ji-zhu-fang-an-que-ding-li-yong-chun-se-xing-jin-xing-fen-ye-pan-duan">技术方案确定 - 利用纯色行进行分页判断</span></h2><p>确定使用技术方案二之后，纵观APP内所有UI页面，能够发现分页算法可以使用纯色行来判断，能否分页要看Y坐标这行的每个像素点是否是一样的色值（RGBA四个都一样，则色值相等），假设这行Y坐标中有不一样的色值，可能是该行有文字、图片、按钮等内容，这时分页的Y坐标要继续换行判断。</p>
+<p>任何过早的优化都是浪费时间和精力，所以先假设UI规范不搞特殊化，即任何页面都能</p>
+<p>技术预言使用DTCoreText + 自定义UIView排版，即正文内容使用DTCoreText的HTML格式来进行排版渲染，末页的附加页使用UIView的传统页面开发方式，<br> 了2种不同方向的解耦做法：</p>
+<p>优秀的APP都会增加用户粘性，阅读APP以优秀的内容取胜，</p>
+<p>实际的开发中还会遇到DTCoreText + 自定义UIView排版，产品大大在每章的章末页添加用户黏性页面，例如作家感言、精彩评论、推荐内容等自定页，这里简称这些非正文内容页面为附加页，该附加页样式复杂，如果附加页也使用DTCoreText库中的HTML、CSS样式来渲染，很可能遇到许多不支持的标签，同时会改变客户端开发习惯，无法使用已开发好的公共组件。如果不使用该库，就会遇到另外一个问题，如何把附加页跟随在正文之后进行分页排版？例如：在正文末页添加一个作者头像、名称、作者感言页和本章精彩评论，该附加页需要和正文一样进行分页排版，每章的附加页都是动态内容，即附加页是动态高度。</p>
+<p>方案一：<br>编写附加页代码时，自带算法进行切页。这种方案对开发人员编码能力要求较高，开发页面时需对不同排版进行适配切页规则，每开发一个新页面时，都需要自带切页算法。</p>
+<p>方案二：<br>编写附加页代码时，不带算法进行分页。这种方案需要制定一套附加页开发标准和切页规则，编写附加页的开发人员要按照该套标准进行页面开发，再交由统一的切页算法进行切页。</p>
+<p>附加页标准：</p>
+<ol>
+<li>按照什么算法进行页面切分。</li>
+<li>切页后，当中页面的顶部和底部间距。</li>
+<li>尾页的处理。</li>
+</ol>
 <p>开发过程中又需要解耦模块，不希望这个新增的页面影响到阅读渲染本身，我这里有一种尝试思路，如有问题希望轻拍。</p>
 <p>PS：目前还未运用到实际项目中，只是一个解耦的想法而已💡</p>
 <h2><span id="jie-jue-si-lu">解决思路</span></h2><ol>
